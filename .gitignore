@@ -14,5 +14,7 @@ build/
 *.aab
 *.jks
 *.keystore
+/keystore/
+/keystore.properties
 
 .DS_Store
