@@ -23,6 +23,8 @@ class TodayProvider(private val clock: Clock, private val scope: CoroutineScope)
         refresh()
     }
 
+    // Synchronized нужен потому что много потоков/корутин обращается одновременно
+    // refresh вызывается в полночь, при перезагрузке MainActivity.onResume(), если изменилось дата/время/пояс и тд
     @Synchronized
     fun refresh() {
         mutableToday.value = LocalDate.now(clock)
@@ -33,6 +35,7 @@ class TodayProvider(private val clock: Clock, private val scope: CoroutineScope)
         }
     }
 
+    // ZonedDateTime для правильного расчета при смене поясов и тд
     private fun millisUntilNextMidnight(): Long {
         val now = ZonedDateTime.now(clock)
         val nextMidnight = now.toLocalDate().plusDays(1).atStartOfDay(now.zone)

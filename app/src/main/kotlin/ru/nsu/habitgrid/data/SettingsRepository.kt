@@ -19,6 +19,7 @@ data class ReminderSettings(
 
 val DEFAULT_REMINDER_TIME: LocalTime = LocalTime.of(21, 0)
 
+// настройки напоминаний также репозиторий это источник правды для приложения
 class SettingsRepository(private val dataStore: DataStore<Preferences>) {
 
     val reminder: Flow<ReminderSettings> = dataStore.data

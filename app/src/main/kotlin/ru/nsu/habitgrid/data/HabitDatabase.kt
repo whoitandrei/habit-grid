@@ -6,11 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
+// описание бд
+// какие таблицы хранятся, exportSchema = сохранить конфигурацию в файле
 @Database(
     entities = [HabitEntity::class, CompletionEntity::class],
     version = 1,
     exportSchema = true,
 )
+// конвертеры типов данных
 @TypeConverters(Converters::class)
 abstract class HabitDatabase : RoomDatabase() {
     abstract fun habitDao(): HabitDao

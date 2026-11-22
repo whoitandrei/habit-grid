@@ -5,8 +5,12 @@ import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
+// data access object
+// связывают запросы к бд через котлин методы/функции
+// suspend - юзают корутины под капотом
 @Dao
 interface HabitDao {
+    // Flow - поток данных, если подписаться то каждый раз при обновлении данных Room подтягивает новые
     @Query("SELECT * FROM habits ORDER BY slot")
     fun observeAll(): Flow<List<HabitEntity>>
 

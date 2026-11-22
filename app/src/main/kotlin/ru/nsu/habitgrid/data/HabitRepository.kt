@@ -9,6 +9,9 @@ import ru.nsu.habitgrid.domain.HabitNameValidator
 import java.time.Clock
 import java.time.LocalDate
 
+// репозиторий - Single Source of Truth
+// ViewModel просит данные, репозиторий сам решает что запросить как отдать и тд
+// прокси/точка входа между приложением и данными
 sealed interface AddHabitResult {
     data class Added(val habit: Habit) : AddHabitResult
     data class InvalidName(val error: HabitNameValidation.Error) : AddHabitResult

@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import java.time.LocalDate
 
+// таблица выполнений привычек
 @Entity(
     tableName = "completions",
     primaryKeys = ["habitId", "date"],
