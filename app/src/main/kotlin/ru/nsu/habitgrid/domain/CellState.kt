@@ -11,6 +11,8 @@ enum class CellState {
     MISSED,
 }
 
+// when похож на match в rust - просто switch более красивый
+// просто тупая логика получения состояния ячейки
 fun cellState(habit: Habit?, date: LocalDate, today: LocalDate, isDone: Boolean): CellState = when {
     habit == null -> CellState.EMPTY_SLOT
     date < habit.createdDate -> CellState.NOT_TRACKED

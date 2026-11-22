@@ -5,6 +5,7 @@ import java.time.YearMonth
 import kotlin.math.roundToInt
 
 data class HabitStats(val habit: Habit, val done: Int, val tracked: Int) {
+    // вычисляемое свойство - когда запрашивают надо вычислить percentOf
     val percent: Int? get() = percentOf(done, tracked)
 }
 
@@ -21,6 +22,7 @@ fun monthStats(
     completions: Map<Long, Set<LocalDate>>,
 ): MonthStats {
     val days = (1..month.lengthOfMonth()).map(month::atDay)
+    // сложная лямбда - в цикле map для каждой привычки считаем статистику и упаковываем в лист
     return MonthStats(
         habits.map { habit ->
             val doneDates = completions[habit.id].orEmpty()

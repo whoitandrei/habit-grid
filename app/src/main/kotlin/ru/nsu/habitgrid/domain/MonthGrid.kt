@@ -3,6 +3,7 @@ package ru.nsu.habitgrid.domain
 import java.time.LocalDate
 import java.time.YearMonth
 
+// обычная месячная сетка с клетками. пустые клетки до 1 числа и после последнего
 fun monthWeeks(month: YearMonth): List<List<LocalDate?>> {
     val leadingBlanks = month.atDay(1).dayOfWeek.value - 1
     val cells: List<LocalDate?> = List(leadingBlanks) { null } + (1..month.lengthOfMonth()).map(month::atDay)
