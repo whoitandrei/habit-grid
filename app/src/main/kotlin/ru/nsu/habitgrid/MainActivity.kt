@@ -1,55 +1,59 @@
 package ru.nsu.habitgrid
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.mutableLongStateOf
+import ru.nsu.habitgrid.ui.navigation.HabitGridNavHost
 import ru.nsu.habitgrid.ui.theme.HabitGridTheme
 
 class MainActivity : ComponentActivity() {
+
+    // на каком дне открыть
+    private val openTodayRequest = mutableLongStateOf(0L)
+
+    // что делать при создании активности
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        // если активность восстанавливается после пересоздания то эту проверку надо опустить так как есть состояния
+        if (savedInstanceState == null) handleOpenToday(intent)
         setContent {
             HabitGridTheme {
-                HabitGridApp()
+                HabitGridNavHost(openTodayRequest = openTodayRequest)
             }
         }
     }
-}
 
-@Composable
-fun HabitGridApp() {
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = stringResource(R.string.app_name),
-                style = MaterialTheme.typography.headlineMedium,
-            )
-        }
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleOpenToday(intent)
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-private fun HabitGridAppPreview() {
-    HabitGridTheme {
-        HabitGridApp()
+    override fun onResume() {
+        super.onResume()
+        container().todayProvider.refresh()
+    }
+
+    private fun handleOpenToday(intent: Intent) {
+        if (!intent.getBooleanExtra(EXTRA_OPEN_TODAY, false)) return
+        intent.removeExtra(EXTRA_OPEN_TODAY)
+        container().todayProvider.refresh()
+        openTodayRequest.longValue = SystemClock.elapsedRealtimeNanos()
+    }
+
+    private fun container() = (application as HabitGridApplication).container
+
+    companion object {
+        const val EXTRA_OPEN_TODAY = "ru.nsu.habitgrid.extra.OPEN_TODAY"
+
+        fun openTodayIntent(context: Context): Intent =
+            Intent(context, MainActivity::class.java)
+                .putExtra(EXTRA_OPEN_TODAY, true)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
     }
 }
